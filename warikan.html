@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>割り勘プラン</title>
+    <title>Warikan Planner</title>
     <style>
       :root {
         color-scheme: light;
@@ -48,6 +48,26 @@
         display: grid;
         grid-template-columns: minmax(310px, 0.8fr) minmax(0, 1.2fr);
         gap: 18px;
+      }
+
+      .byline {
+        grid-column: 1 / -1;
+        margin: -6px 0 -8px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .byline a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .byline a:hover {
+        color: var(--ink);
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
 
       .panel {
@@ -205,6 +225,31 @@
         font-size: 1rem;
       }
 
+      .plan-title {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .reset-button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f7f4ee;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 850;
+        padding: 7px 10px;
+        white-space: nowrap;
+      }
+
+      .reset-button:disabled {
+        color: #a8aeb4;
+        cursor: not-allowed;
+        opacity: 0.58;
+      }
+
       .badge {
         padding: 5px 9px;
         border-radius: 999px;
@@ -233,7 +278,7 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 14px;
-        align-items: baseline;
+        align-items: center;
       }
 
       .line-item span {
@@ -246,14 +291,105 @@
         white-space: nowrap;
       }
 
+      .amount-control {
+        display: grid;
+        grid-template-columns: 34px minmax(96px, 132px) 34px auto;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .amount-control button {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f7f4ee;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 1.05rem;
+        font-weight: 900;
+      }
+
+      .amount-control input {
+        width: 100%;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0 8px;
+        color: var(--ink);
+        background: #fff;
+        text-align: right;
+        font-weight: 850;
+      }
+
+      .amount-control .multiply {
+        color: var(--ink);
+        font-size: 1rem;
+        font-weight: 850;
+        white-space: nowrap;
+      }
+
       .remainder {
         margin-top: 4px;
         padding-top: 12px;
         border-top: 1px dashed var(--line);
       }
 
+      .remainder-tools {
+        width: 314px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 14px;
+        align-items: center;
+      }
+
       .remainder strong {
         color: var(--red);
+      }
+
+      .zero-button {
+        justify-self: start;
+        min-height: 34px;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        font-weight: 900;
+      }
+
+      .switch-track {
+        width: 48px;
+        height: 26px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #d7d1c8;
+        padding: 2px;
+        transition:
+          background 160ms ease,
+          border-color 160ms ease;
+      }
+
+      .switch-thumb {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        color: #fff;
+        background: #fff;
+        box-shadow: 0 2px 7px rgba(31, 28, 22, 0.2);
+        transition: transform 160ms ease;
+      }
+
+      .zero-button.is-on .switch-track {
+        border-color: var(--green);
+        background: var(--green);
+      }
+
+      .zero-button.is-on .switch-thumb {
+        transform: translateX(22px);
       }
 
       .empty {
@@ -276,21 +412,39 @@
         .plans {
           min-height: auto;
         }
+
+        .line-item {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .amount-control {
+          grid-template-columns: 38px minmax(0, 1fr) 38px auto;
+        }
+
+        .remainder-tools {
+          width: 100%;
+          grid-template-columns: 1fr auto;
+        }
       }
     </style>
   </head>
   <body>
     <main class="app">
+      <div class="byline">
+        by
+        <a href="https://note.com/hidehisa_guitar/m/m9e336a3956ca" target="_blank" rel="noopener noreferrer">Hidehisa Sasaki Guitar Method</a>
+      </div>
       <section class="panel inputs" aria-label="入力">
         <div>
-          <h1>割り勘</h1>
+          <h1>Warikan Planner</h1>
           <p class="lead">飲み方に差がある日の会計案をいくつか出します。</p>
         </div>
 
         <div class="field">
           <label for="total">全体会計</label>
           <div class="total-input">
-            <input id="total" type="number" min="0" step="100" value="30200" inputmode="numeric" />
+            <input id="total" type="number" min="0" step="100" value="25430" inputmode="numeric" />
             <span class="yen">円</span>
           </div>
         </div>
@@ -326,7 +480,7 @@
           </div>
           <div class="stepper">
             <button type="button" data-target="late" data-step="-1" aria-label="途中参加を減らす">−</button>
-            <span class="count" id="lateCount">0</span>
+            <span class="count" id="lateCount">1</span>
             <button type="button" data-target="late" data-step="1" aria-label="途中参加を増やす">+</button>
           </div>
         </div>
@@ -338,7 +492,7 @@
           </div>
           <div class="stepper">
             <button type="button" data-target="none" data-step="-1" aria-label="なしを減らす">−</button>
-            <span class="count" id="noneCount">1</span>
+            <span class="count" id="noneCount">0</span>
             <button type="button" data-target="none" data-step="1" aria-label="なしを増やす">+</button>
           </div>
         </div>
@@ -354,7 +508,7 @@
 
     <script>
       const totalInput = document.querySelector("#total");
-      const counts = { alcohol: 4, soft: 1, late: 0, none: 1 };
+      const counts = { alcohol: 4, soft: 1, late: 1, none: 0 };
       const countEls = {
         alcohol: document.querySelector("#alcoholCount"),
         soft: document.querySelector("#softCount"),
@@ -363,6 +517,7 @@
       };
       const summary = document.querySelector("#summary");
       const planList = document.querySelector("#planList");
+      let currentPlans = [];
 
       const yen = new Intl.NumberFormat("ja-JP", {
         style: "currency",
@@ -372,6 +527,10 @@
 
       function formatYen(value) {
         return yen.format(value);
+      }
+
+      function formatDiffYen(value) {
+        return value > 0 ? `+${formatYen(value)}` : formatYen(value);
       }
 
       function roundTo(value, unit) {
@@ -391,7 +550,39 @@
           none,
           paid,
           remainder: Number(totalInput.value || 0) - paid,
+          zeroLocked: false,
+          savedAmounts: null,
+          originalAmounts: { alcohol, soft, late, none },
         };
+      }
+
+      function calculatePlan(plan) {
+        const paid =
+          plan.alcohol * counts.alcohol +
+          plan.soft * counts.soft +
+          plan.late * counts.late +
+          plan.none * counts.none;
+        return {
+          ...plan,
+          paid,
+          remainder: Number(totalInput.value || 0) - paid,
+        };
+      }
+
+      function collectionDiff(plan) {
+        return calculatePlan(plan).paid - Number(totalInput.value || 0);
+      }
+
+      function normalizeAmount(value) {
+        return Math.max(0, Math.round(value));
+      }
+
+      function amountFields() {
+        return ["alcohol", "soft", "late", "none"];
+      }
+
+      function planChanged(plan) {
+        return amountFields().some((field) => plan[field] !== plan.originalAmounts[field]);
       }
 
       function generatePlans() {
@@ -410,8 +601,8 @@
             const maxLate = counts.late > 0 ? soft : 0;
             for (let late = 0; late <= maxLate; late += 500) {
               const paid = alcohol * counts.alcohol + soft * counts.soft + late * counts.late;
-              const remainder = total - paid;
-              if (remainder < 0 || remainder >= 1000) continue;
+              const collectionDiff = paid - total;
+              if (collectionDiff < 0 || collectionDiff >= 1000) continue;
               const softRatio = alcohol === 0 ? 0 : soft / alcohol;
               const lateRatio = alcohol === 0 ? 0 : late / alcohol;
               const score =
@@ -420,8 +611,8 @@
                 Math.abs(late - targetLate) +
                 Math.abs(softRatio - 0.62) * 1200 +
                 Math.abs(lateRatio - 0.38) * 900 +
-                Math.abs(remainder - 200) * 0.5;
-              options.push({ alcohol, soft, late, none: 0, remainder, score });
+                Math.abs(collectionDiff - 200) * 0.5;
+              options.push({ alcohol, soft, late, none: 0, collectionDiff, score });
             }
           }
         }
@@ -464,46 +655,139 @@
           const soft = roundTo(Math.min(alcohol, alcohol * 0.68), 500);
           const late = roundTo(Math.min(soft, alcohol * 0.4), 500);
           const supportPlan = makePlan("なしも少し参加", "全員感", "blue", alcohol, soft, late, noneShare);
-          if (supportPlan.remainder >= 0 && supportPlan.remainder < 1500) plans.push(supportPlan);
+          const supportDiff = collectionDiff(supportPlan);
+          if (supportDiff >= 0 && supportDiff < 1500) plans.push(supportPlan);
         }
 
         return plans.slice(0, 4);
       }
 
-      function renderPlan(plan) {
+      function renderAmountControl(planIndex, field, value, count, label) {
         return `
-          <article class="plan">
+          <div class="amount-control">
+            <button type="button" data-plan-index="${planIndex}" data-field="${field}" data-amount-step="-500" aria-label="${label}を500円下げる">−</button>
+            <input type="number" min="0" step="1" inputmode="numeric" value="${value}" data-plan-index="${planIndex}" data-field="${field}" aria-label="${label}の金額" />
+            <button type="button" data-plan-index="${planIndex}" data-field="${field}" data-amount-step="500" aria-label="${label}を500円上げる">+</button>
+            <span class="multiply">× ${count}</span>
+          </div>
+        `;
+      }
+
+      function renderPlan(plan, index) {
+        const calculated = calculatePlan(plan);
+        const hasChanges = planChanged(calculated);
+        return `
+          <article class="plan" data-plan-card="${index}">
             <div class="plan-head">
-              <h2>${plan.name}</h2>
-              <span class="badge ${plan.badgeClass}">${plan.badge}</span>
+              <div class="plan-title">
+                <h2>${calculated.name}</h2>
+                <button class="reset-button" type="button" data-reset-plan="${index}" ${hasChanges ? "" : "disabled"}>おすすめ設定に戻す</button>
+              </div>
+              <span class="badge ${calculated.badgeClass}">${calculated.badge}</span>
             </div>
             <div class="plan-body">
               <div class="line-item">
                 <span>アルコールあり ${counts.alcohol}人</span>
-                <strong>${formatYen(plan.alcohol)} × ${counts.alcohol}</strong>
+                ${renderAmountControl(index, "alcohol", calculated.alcohol, counts.alcohol, "アルコールあり")}
               </div>
               <div class="line-item">
                 <span>アルコールなし ${counts.soft}人</span>
-                <strong>${formatYen(plan.soft)} × ${counts.soft}</strong>
+                ${renderAmountControl(index, "soft", calculated.soft, counts.soft, "アルコールなし")}
               </div>
               <div class="line-item">
                 <span>途中参加（少なめ） ${counts.late}人</span>
-                <strong>${formatYen(plan.late)} × ${counts.late}</strong>
+                ${renderAmountControl(index, "late", calculated.late, counts.late, "途中参加")}
               </div>
               <div class="line-item">
                 <span>なし ${counts.none}人</span>
-                <strong>${formatYen(plan.none)} × ${counts.none}</strong>
+                ${renderAmountControl(index, "none", calculated.none, counts.none, "なし")}
               </div>
               <div class="line-item remainder">
                 <span>端数</span>
-                <strong>${formatYen(plan.remainder)}</strong>
+                <div class="remainder-tools">
+                  <button class="zero-button ${calculated.zeroLocked ? "is-on" : ""}" type="button" data-zero-remainder="${index}" aria-pressed="${calculated.zeroLocked}">
+                    <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                    <span>端数0にする</span>
+                  </button>
+                  <strong data-remainder>${formatDiffYen(collectionDiff(calculated))}</strong>
+                </div>
               </div>
             </div>
           </article>
         `;
       }
 
-      function render() {
+      function updatePlanRemainder(planIndex) {
+        const plan = currentPlans[planIndex];
+        const planElement = planList.querySelector(`[data-plan-card="${planIndex}"]`);
+        const remainderElement = planElement?.querySelector("[data-remainder]");
+        if (!plan || !remainderElement) return;
+        remainderElement.textContent = formatDiffYen(collectionDiff(plan));
+      }
+
+      function updatePlanValue(planIndex, field, value) {
+        const plan = currentPlans[planIndex];
+        if (!plan || !Object.prototype.hasOwnProperty.call(plan, field)) return false;
+        plan[field] = normalizeAmount(Number(value || 0));
+        if (["alcohol", "soft", "late", "none"].includes(field)) {
+          plan.zeroLocked = false;
+          plan.savedAmounts = null;
+        }
+        return true;
+      }
+
+      function zeroRemainder(planIndex) {
+        const plan = currentPlans[planIndex];
+        if (!plan) return;
+        const diff = collectionDiff(plan);
+        if (diff === 0) return;
+
+        const candidates = ["alcohol", "soft", "late", "none"]
+          .filter((field) => counts[field] > 0);
+        const target = candidates
+          .filter((field) => diff < 0 || plan[field] >= diff / counts[field])
+          .sort((a, b) => plan[a] - plan[b] || a.localeCompare(b))[0];
+        if (!target) return;
+
+        plan[target] = normalizeAmount(plan[target] - diff / counts[target]);
+      }
+
+      function toggleZeroRemainder(planIndex) {
+        const plan = currentPlans[planIndex];
+        if (!plan) return;
+
+        if (plan.zeroLocked) {
+          if (plan.savedAmounts) {
+            amountFields().forEach((field) => {
+              plan[field] = plan.savedAmounts[field];
+            });
+          }
+          plan.zeroLocked = false;
+          plan.savedAmounts = null;
+          return;
+        }
+
+        plan.savedAmounts = {
+          alcohol: plan.alcohol,
+          soft: plan.soft,
+          late: plan.late,
+          none: plan.none,
+        };
+        zeroRemainder(planIndex);
+        plan.zeroLocked = collectionDiff(plan) === 0;
+      }
+
+      function resetPlan(planIndex) {
+        const plan = currentPlans[planIndex];
+        if (!plan) return;
+        amountFields().forEach((field) => {
+          plan[field] = plan.originalAmounts[field];
+        });
+        plan.zeroLocked = false;
+        plan.savedAmounts = null;
+      }
+
+      function render(regeneratePlans = true) {
         Object.entries(countEls).forEach(([key, element]) => {
           element.textContent = counts[key];
         });
@@ -512,9 +796,11 @@
         const people = counts.alcohol + counts.soft + counts.late + counts.none;
         summary.innerHTML = `<strong>${formatYen(total)}</strong> / 参加 ${people}人 / 支払い対象 ${counts.alcohol + counts.soft + counts.late}人`;
 
-        const plans = generatePlans();
-        planList.innerHTML = plans.length
-          ? plans.map(renderPlan).join("")
+        if (regeneratePlans) {
+          currentPlans = generatePlans();
+        }
+        planList.innerHTML = currentPlans.length
+          ? currentPlans.map(renderPlan).join("")
           : `<div class="empty">全体会計と人数を入れると、支払い案が表示されます。</div>`;
       }
 
@@ -523,12 +809,60 @@
           const key = button.dataset.target;
           const step = Number(button.dataset.step);
           counts[key] = Math.max(0, counts[key] + step);
-          render();
+          render(true);
         });
       });
 
-      totalInput.addEventListener("input", render);
-      render();
+      planList.addEventListener("click", (event) => {
+        const resetButton = event.target.closest("[data-reset-plan]");
+        if (resetButton) {
+          resetPlan(Number(resetButton.dataset.resetPlan));
+          render(false);
+          return;
+        }
+
+        const zeroButton = event.target.closest("[data-zero-remainder]");
+        if (zeroButton) {
+          toggleZeroRemainder(Number(zeroButton.dataset.zeroRemainder));
+          render(false);
+          return;
+        }
+
+        const button = event.target.closest("[data-amount-step]");
+        if (!button) return;
+        const planIndex = Number(button.dataset.planIndex);
+        const plan = currentPlans[planIndex];
+        const field = button.dataset.field;
+        if (!plan || !field) return;
+        updatePlanValue(planIndex, field, Number(plan[field] || 0) + Number(button.dataset.amountStep));
+        render(false);
+      });
+
+      planList.addEventListener("input", (event) => {
+        const input = event.target.closest("input[data-plan-index][data-field]");
+        if (!input) return;
+        const planIndex = Number(input.dataset.planIndex);
+        const field = input.dataset.field;
+        if (!updatePlanValue(planIndex, field, input.value)) return;
+        updatePlanRemainder(planIndex);
+      });
+
+      planList.addEventListener("change", (event) => {
+        const input = event.target.closest("input[data-plan-index][data-field]");
+        if (!input) return;
+        const planIndex = Number(input.dataset.planIndex);
+        const plan = currentPlans[planIndex];
+        const field = input.dataset.field;
+        if (!plan || !field) return;
+        if (Number(input.value || 0) < 0) {
+          updatePlanValue(planIndex, field, 0);
+        }
+        input.value = plan[field];
+        render(false);
+      });
+
+      totalInput.addEventListener("input", () => render(true));
+      render(true);
     </script>
   </body>
 </html>
